@@ -151,6 +151,8 @@ exports.compile = compile = withPrettyErrors (code, options = {}) ->
     delete options.transpile.transpile
 
     transpilerOptions = Object.assign {}, options.transpile
+    # Pass CoffeeScript filename to Babel
+    transpilerOptions.filename ?= options.filename
 
     # See https://github.com/babel/babel/issues/827#issuecomment-77573107:
     # Babel can take a v3 source map object as input in `inputSourceMap`
