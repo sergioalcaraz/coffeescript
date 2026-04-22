@@ -50,6 +50,7 @@
   white-space: pre-wrap;
 }
 .CodeMirror pre,
+.CodeMirror pre.CodeMirror-line,
 pre.placeholder-code {
   line-height: 1.4em;
 }
@@ -703,7 +704,7 @@ textarea {
       <section id="introduction">
         <p><strong>CoffeeScript is a little language that compiles into JavaScript.</strong> Underneath that awkward Java-esque patina, JavaScript has always had a gorgeous heart. CoffeeScript is an attempt to expose the good parts of JavaScript in a simple way.</p>
 <p>The golden rule of CoffeeScript is: <em>“It’s just JavaScript.”</em> The code compiles one-to-one into the equivalent JS, and there is no interpretation at runtime. You can use any existing JavaScript library seamlessly from CoffeeScript (and vice-versa). The compiled output is readable, pretty-printed, and tends to run as fast or faster than the equivalent handwritten JavaScript.</p>
-<p><strong>Latest Version:</strong> <a href="https://github.com/jashkenas/coffeescript/tarball/2.6.1">2.6.1</a></p>
+<p><strong>Latest Version:</strong> <a href="https://github.com/jashkenas/coffeescript/tarball/2.7.0">2.7.0</a></p>
 <blockquote class="uneditable-code-block"><pre><code class="language-bash"><span class="comment"># Install locally for a project:</span>
 npm install --save-dev coffeescript
 
@@ -4859,7 +4860,7 @@ The CoffeeScript logo is available in SVG for use in presentations.</li>
         </section>
         <section id="annotated-source">
           <h2>Annotated Source</h2>
-<p>You can browse the CoffeeScript 2.6.1 source in readable, annotated form <a href="annotated-source/">here</a>. You can also jump directly to a particular source file:</p>
+<p>You can browse the CoffeeScript 2.7.0 source in readable, annotated form <a href="annotated-source/">here</a>. You can also jump directly to a particular source file:</p>
 <ul>
 <li><a href="annotated-source/grammar.html">Grammar Rules — src/grammar</a></li>
 <li><a href="annotated-source/lexer.html">Lexing Tokens — src/lexer</a></li>
@@ -5168,27 +5169,27 @@ var f = function*() {
           <h3>Classes are compiled to ES2015 classes</h3>
 <p>ES2015 classes and their methods have some restrictions beyond those on regular functions.</p>
 <p>Class constructors can’t be invoked without <code>new</code>:</p>
-<blockquote class="uneditable-code-block"><pre><code class="language-coffee">(<span class="class"><span class="keyword">class</span>)()</span>
+<blockquote class="uneditable-code-block"><pre><code class="language-coffee">(<span class="keyword">class</span>)()
 <span class="comment"># Throws a TypeError at runtime</span>
 </code></pre>
 </blockquote><p>ES2015 classes don’t allow bound (fat arrow) methods. The CoffeeScript compiler goes through some contortions to preserve support for them, but one thing that can’t be accommodated is calling a bound method before it is bound:</p>
-<blockquote class="uneditable-code-block"><pre><code class="language-coffee"><span class="class"><span class="keyword">class</span> <span class="title">Base</span></span>
+<blockquote class="uneditable-code-block"><pre><code class="language-coffee"><span class="keyword">class</span> <span class="title class_">Base</span>
   constructor: <span class="function">-&gt;</span>
     @onClick()      <span class="comment"># This works</span>
     clickHandler = @onClick
     clickHandler()  <span class="comment"># This throws a runtime error</span>
 
-<span class="class"><span class="keyword">class</span> <span class="title">Component</span> <span class="keyword">extends</span> <span class="title">Base</span></span>
+<span class="keyword">class</span> <span class="title class_">Component</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Base</span>
   onClick: <span class="function">=&gt;</span>
     console.log <span class="string">&#x27;Clicked!&#x27;</span>, @
 </code></pre>
 </blockquote><p>Class methods can’t be used with <code>new</code> (uncommon):</p>
-<blockquote class="uneditable-code-block"><pre><code class="language-coffee"><span class="class"><span class="keyword">class</span> <span class="title">Namespace</span></span>
+<blockquote class="uneditable-code-block"><pre><code class="language-coffee"><span class="keyword">class</span> <span class="title class_">Namespace</span>
   @Klass = <span class="function">-&gt;</span>
 <span class="keyword">new</span> Namespace.Klass  <span class="comment"># Throws a TypeError at runtime</span>
 </code></pre>
 </blockquote><p>Due to the hoisting required to compile to ES2015 classes, dynamic keys in class methods can’t use values from the executable class body unless the methods are assigned in prototype style.</p>
-<blockquote class="uneditable-code-block"><pre><code class="language-coffee"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span>
+<blockquote class="uneditable-code-block"><pre><code class="language-coffee"><span class="keyword">class</span> <span class="title class_">A</span>
   name = <span class="string">&#x27;method&#x27;</span>
   <span class="string">&quot;<span class="subst">#{name}</span>&quot;</span>: <span class="function">-&gt;</span>   <span class="comment"># This method will be named &#x27;undefined&#x27;</span>
   @::[name] = <span class="function">-&gt;</span>  <span class="comment"># This will work; assigns to `A.prototype.method`</span>
@@ -5198,11 +5199,11 @@ var f = function*() {
         <section id="breaking-changes-super-this">
           <h3><code>super</code> and <code>this</code></h3>
 <p>In the constructor of a derived class (a class that <code>extends</code> another class), <code>this</code> cannot be used before calling <code>super</code>:</p>
-<blockquote class="uneditable-code-block"><pre><code class="language-coffee"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span></span>
+<blockquote class="uneditable-code-block"><pre><code class="language-coffee"><span class="keyword">class</span> <span class="title class_">B</span> <span class="keyword">extends</span> <span class="title class_ inherited__">A</span>
   constructor: <span class="function">-&gt;</span> this  <span class="comment"># Throws a compiler error</span>
 </code></pre>
 </blockquote><p>This also means you cannot pass a reference to <code>this</code> as an argument to <code>super</code> in the constructor of a derived class:</p>
-<blockquote class="uneditable-code-block"><pre><code class="language-coffee"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span></span>
+<blockquote class="uneditable-code-block"><pre><code class="language-coffee"><span class="keyword">class</span> <span class="title class_">B</span> <span class="keyword">extends</span> <span class="title class_ inherited__">A</span>
   constructor: <span class="function"><span class="params">(@arg)</span> -&gt;</span>
     super @arg  <span class="comment"># Throws a compiler error</span>
 </code></pre>
@@ -5247,7 +5248,7 @@ var f = function*() {
         <section id="breaking-changes-super-extends">
           <h3><code>super</code> and <code>extends</code></h3>
 <p>Due to a syntax clash with <code>super</code> with accessors, “bare” <code>super</code> (the keyword <code>super</code> without parentheses) no longer compiles to a super call forwarding all arguments.</p>
-<blockquote class="uneditable-code-block"><pre><code class="language-coffee"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span></span>
+<blockquote class="uneditable-code-block"><pre><code class="language-coffee"><span class="keyword">class</span> <span class="title class_">B</span> <span class="keyword">extends</span> <span class="title class_ inherited__">A</span>
   foo: <span class="function">-&gt;</span> super
   <span class="comment"># Throws a compiler error</span>
 </code></pre>
@@ -5486,7 +5487,7 @@ x = <span class="number">2</span> + <span class="number">2</span>
 console.log x
 </code></pre>
 </blockquote><p>If this were saved as <code>executable.coffee</code>, it could be made executable and run:</p>
-<blockquote class="uneditable-code-block"><pre><code class="language-bash">▶ chmod +x ./executable.coffee
+<blockquote class="uneditable-code-block"><pre><code class="language-bash">▶ <span class="built_in">chmod</span> +x ./executable.coffee
 ▶ ./executable.coffee
 4
 </code></pre>
@@ -5497,6 +5498,17 @@ console.log x
       <section id="changelog">
         <h2>Changelog</h2>
 
+        <section id="2.7.0">
+          <h3><a href="https://github.com/jashkenas/coffeescript/compare/2.6.1...2.7.0">2.7.0</a>
+  <span class="timestamp"> &mdash; <time datetime="2022-04-23">2022-04-23</time></span>
+</h3><ul>
+<li>The <a href="https://github.com/tc39/proposal-import-assertions">import assertions syntax</a> is now supported. This allows statements like <code>export { version } from './package.json' assert { type: 'json' }</code> or expressions like <code>import('./calendar.json', { assert { type: 'json' } })</code>.</li>
+<li>CoffeeScript no longer always patches Node’s error stack traces. This patching, where the line and column numbers are adjusted to match the source CoffeeScript rather than the generated JavaScript, caused conflicts with other libraries and is unnecessary when Node’s new <a href="https://nodejs.org/docs/latest/api/cli.html#--enable-source-maps"><code>--enable-source-maps</code> flag</a> is passed. The patching will now occur only when <code>--enable-source-maps</code> is not set, no other library has already patched the stack traces, and <code>require('coffeescript/register')</code> is used. The patching can be enabled explicitly via <code>require('coffeescript').patchStackTrace()</code> or <code>import { patchStackTrace } from 'coffeescript'; patchStackTrace()</code>.</li>
+<li>Bugfix for an issue where block (triple-quoted) strings weren’t getting transpiled correctly into a JSX expression container wrapping the template literal (such as <code>&lt;div a={`...`} /&gt;</code>).</li>
+<li>Bugfixes for line continuations not behaving as expected for a nonempty first line of an explicit <code>[</code> array or <code>{</code> object literal.</li>
+</ul>
+
+        </section>
         <section id="2.6.1">
           <h3><a href="https://github.com/jashkenas/coffeescript/compare/2.6.0...2.6.1">2.6.1</a>
   <span class="timestamp"> &mdash; <time datetime="2021-10-03">2021-10-03</time></span>

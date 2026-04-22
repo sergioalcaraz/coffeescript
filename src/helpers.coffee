@@ -47,13 +47,7 @@ extend = exports.extend = (object, properties) ->
 # Return a flattened version of an array.
 # Handy for getting a list of `children` from the nodes.
 exports.flatten = flatten = (array) ->
-  flattened = []
-  for element in array
-    if '[object Array]' is Object::toString.call element
-      flattened = flattened.concat flatten element
-    else
-      flattened.push element
-  flattened
+  array.flat(Infinity)
 
 # Delete a key from an object, returning the value. Useful when a node is
 # looking for a particular method in an options hash.
@@ -188,6 +182,13 @@ exports.locationDataToString = (obj) ->
   else
     "No location data"
 
+# Generate a unique anonymous file name so we can distinguish source map cache
+# entries for any number of anonymous scripts.
+exports.anonymousFileName = do ->
+  n = 0
+  ->
+    "<anonymous-#{n++}>"
+
 # A `.coffee.md` compatible version of `basename`, that returns the file sans-extension.
 exports.baseFileName = (file, stripExt = no, useWinPathSep = no) ->
   pathSep = if useWinPathSep then /\\|\// else /\//
@@ -238,7 +239,11 @@ syntaxErrorToString = ->
   last_line ?= first_line
   last_column ?= first_column
 
-  filename = @filename or '[stdin]'
+  if @filename?.startsWith '<anonymous'
+    filename = '[stdin]'
+  else
+    filename = @filename or '[stdin]'
+
   codeLine = @code.split('\n')[first_line]
   start    = first_column
   # Show only the first line on multi-line errors.

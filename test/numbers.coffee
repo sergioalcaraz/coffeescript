@@ -21,6 +21,7 @@ test "Parser recognises binary numbers", ->
 test "call methods directly on numbers", ->
   eq 4, 4.valueOf()
   eq '11', 4.toString 3
+  eq '1000', 1_000.toString()
 
 eq -1, 3 -4
 
@@ -66,11 +67,15 @@ test "Python-style octal literal notation '0o777'", ->
   eq Number::toString, 0o777['toString']
   eq Number::toString, 0o777.toString
 
-test "#2060: Disallow uppercase radix prefixes and exponential notation", ->
-  for char in ['b', 'o', 'x', 'e']
+test "#2060: Disallow uppercase radix prefixes", ->
+  for char in ['b', 'o', 'x']
     program = "0#{char}0"
     doesNotThrowCompileError program, bare: yes
     throwsCompileError program.toUpperCase(), bare: yes
+
+test "#5164: Allow lowercase and uppercase exponent notation", ->
+  doesNotThrow -> CoffeeScript.compile "0e0", bare: yes
+  doesNotThrow -> CoffeeScript.compile "0E0", bare: yes
 
 test "#2224: hex literals with 0b or B or E", ->
   eq 176, 0x0b0

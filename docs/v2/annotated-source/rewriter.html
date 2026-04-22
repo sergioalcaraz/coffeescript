@@ -738,11 +738,13 @@ Added support for spread dots on the left side: f …a</p>
 <pre><code>f
   a: b
   c: d
-</code></pre><p>Don’t accept implicit calls of this type, when on the same line
+</code></pre>
+<p>Don’t accept implicit calls of this type, when on the same line
 as the control structures below as that may misinterpret constructs like:</p>
 <pre><code><span class="hljs-keyword">if</span> f
    a: <span class="hljs-number">1</span>
-</code></pre><p>as</p>
+</code></pre>
+<p>as</p>
 <pre><code><span class="hljs-keyword">if</span> f(a: <span class="hljs-number">1</span>)
 </code></pre><p>which is probably always unintended.
 Furthermore don’t allow this in the first line of a literal array
@@ -846,11 +848,13 @@ like e.g.:</p>
 .g b, <span class="hljs-function">-&gt;</span>
   c
 .h a
-</code></pre><p>and also</p>
+</code></pre>
+<p>and also</p>
 <pre><code>f a
 .g b
 .h a
 </code></pre>
+
             </div>
             
         </li>
@@ -971,9 +975,11 @@ This is used for trailing commas and calls, like:</p>
     a: b,
     c: d,
 e = <span class="hljs-number">2</span>
-</code></pre><p>and</p>
+</code></pre>
+<p>and</p>
 <pre><code>f a, b: c, d: e, f, g: h: i, j
 </code></pre>
+
             </div>
             
             <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> tag <span class="hljs-keyword">is</span> <span class="hljs-string">&#x27;,&#x27;</span> <span class="hljs-keyword">and</span> <span class="hljs-keyword">not</span> @looksObjectish(i + <span class="hljs-number">1</span>) <span class="hljs-keyword">and</span> inImplicitObject() <span class="hljs-keyword">and</span> <span class="hljs-keyword">not</span> (@tag(i + <span class="hljs-number">2</span>) <span class="hljs-keyword">in</span> [<span class="hljs-string">&#x27;FOROF&#x27;</span>, <span class="hljs-string">&#x27;FORIN&#x27;</span>]) <span class="hljs-keyword">and</span>

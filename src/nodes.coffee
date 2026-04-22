@@ -610,7 +610,7 @@ exports.Block = class Block extends Base
   makeReturn: (results, mark) ->
     len = @expressions.length
     [..., lastExp] = @expressions
-    lastExp = lastExp?.unwrap() or no
+    lastExp = lastExp?.unwrap?() or no
     # We also need to check that we’re not returning a JSX tag if there’s an
     # adjacent one at the same level; JSX doesn’t allow that.
     if lastExp and lastExp instanceof Parens and lastExp.body.expressions.length > 1
@@ -5851,7 +5851,7 @@ LEVEL_ACCESS = 6  # ...[0]
 # Tabs are two spaces for pretty printing.
 TAB = '  '
 
-SIMPLENUM = /^[+-]?\d+$/
+SIMPLENUM = /^[+-]?\d+(?:_\d+)*$/
 SIMPLE_STRING_OMIT = /\s*\n\s*/g
 LEADING_BLANK_LINE  = /^[^\n\S]*\n/
 TRAILING_BLANK_LINE = /\n[^\n\S]*$/

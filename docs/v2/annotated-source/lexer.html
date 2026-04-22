@@ -120,7 +120,8 @@ matches against the beginning of the source code. When a match is found,
 a token is produced, we consume the match, and start again. Tokens are in the
 form:</p>
 <pre><code>[tag, value, locationData]
-</code></pre><p>where locationData is {first_line, first_column, last_line, last_column, last_line_exclusive, last_column_exclusive}, which is a
+</code></pre>
+<p>where locationData is {first_line, first_column, last_line, last_column, last_line_exclusive, last_column_exclusive}, which is a
 format that can be fed directly into <a href="https://github.com/zaach/jison">Jison</a>.  These
 are read by jison in the <code>parser.lexer</code> function defined in coffeescript.coffee.</p>
 
@@ -551,9 +552,6 @@ Be careful not to interfere with ranges in progress.</p>
     <span class="hljs-keyword">switch</span>
       <span class="hljs-keyword">when</span> <span class="hljs-regexp">/^0[BOX]/</span>.test number
         @error <span class="hljs-string">&quot;radix prefix in &#x27;<span class="hljs-subst">#{number}</span>&#x27; must be lowercase&quot;</span>, offset: <span class="hljs-number">1</span>
-      <span class="hljs-keyword">when</span> <span class="hljs-regexp">/^(?!0x).*E/</span>.test number
-        @error <span class="hljs-string">&quot;exponential notation in &#x27;<span class="hljs-subst">#{number}</span>&#x27; must be indicated with a lowercase &#x27;e&#x27;&quot;</span>,
-          offset: number.indexOf(<span class="hljs-string">&#x27;E&#x27;</span>)
       <span class="hljs-keyword">when</span> <span class="hljs-regexp">/^0\d*[89]/</span>.test number
         @error <span class="hljs-string">&quot;decimal literal &#x27;<span class="hljs-subst">#{number}</span>&#x27; must not be prefixed with &#x27;0&#x27;&quot;</span>, length: lexedLength
       <span class="hljs-keyword">when</span> <span class="hljs-regexp">/^0\d+/</span>.test number
@@ -974,7 +972,8 @@ then the newline is suppressed:</p>
 <pre><code>elements
   .each( ... )
   .map( ... )
-</code></pre><p>Keeps track of the level of indentation, because a single outdent token
+</code></pre>
+<p>Keeps track of the level of indentation, because a single outdent token
 can close multiple indents, so we need to know how far in we happen to be.</p>
 
             </div>
@@ -1590,7 +1589,8 @@ identifier to allow for different grammar precedence</p>
 inside it using Ruby-like notation for substitution of arbitrary
 expressions.</p>
 <pre><code><span class="hljs-string">&quot;Hello <span class="hljs-subst">#{name.capitalize()}</span>.&quot;</span>
-</code></pre><p>If it encounters an interpolation, this method will recursively create a new
+</code></pre>
+<p>If it encounters an interpolation, this method will recursively create a new
 Lexer and tokenize until the <code>{</code> of <code>#{</code> is balanced with a <code>}</code>.</p>
 <ul>
 <li><code>regex</code> matches the contents of a token (but not <code>delimiter</code>, and not
@@ -1941,6 +1941,7 @@ correctly balanced throughout the course of the token stream.</p>
 <pre><code>el.click(<span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
   el.hide())
 </code></pre>
+
             </div>
             
             <div class="content"><div class='highlight'><pre>      [..., lastIndent] = @indents
@@ -2604,9 +2605,9 @@ NUMBER     = <span class="hljs-regexp">///
   ^ 0b[01](?:_?[01])*n?                         | <span class="hljs-comment"># binary</span>
   ^ 0o[0-7](?:_?[0-7])*n?                       | <span class="hljs-comment"># octal</span>
   ^ 0x[\da-f](?:_?[\da-f])*n?                   | <span class="hljs-comment"># hex</span>
-  ^ \d+n                                        | <span class="hljs-comment"># decimal bigint</span>
-  ^ (?:\d(?:_?\d)*)?    \.?   (?:\d(?:_?\d)*)+    <span class="hljs-comment"># decimal</span>
-                    (?:e[+-]? (?:\d(?:_?\d)*)+ )?
+  ^ \d+(?:_\d+)*n                               | <span class="hljs-comment"># decimal bigint</span>
+  ^ (?:\d+(?:_\d+)*)?      \.? \d+(?:_\d+)*       <span class="hljs-comment"># decimal</span>
+                     (?:e[+-]? \d+(?:_\d+)* )?
 </span></pre></div></div>
             
         </li>
